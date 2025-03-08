@@ -18,6 +18,7 @@ Most versions of this modchart system doesn't have support for middlescroll, now
 - If you're using middlescroll AND upscroll, save the modchart as "modchart-middleUp"
 - If you're using only downscroll, save the modchart as "modchart-downscroll"
 - If you're using middlescroll AND downscroll, save the modchart as "modchart-middleDown"
+  
 IT IS CASE SENSITIVE, SAVE IT EXACTLY AS IT'S LISTED
 
 ## Credits 
