@@ -42,15 +42,15 @@ IT IS CASE SENSITIVE, SAVE IT EXACTLY AS IT'S LISTED
 2. Now you only need to make a few small additions to get everything working,
 - In MusicBeatState.hx:
 ```haxe
-class MusicBeatState extends modcharting.ModchartMusicBeatState
+class MusicBeatState extends modchart.modcharting.ModchartMusicBeatState
 {
   
 ```
 - In PlayState.hx:
 ```haxe
-import modcharting.ModchartFuncs;
-import modcharting.NoteMovement;
-import modcharting.PlayfieldRenderer;
+import modchart.modcharting.ModchartFuncs;
+import modchart.modcharting.NoteMovement;
+import modchart.modcharting.PlayfieldRenderer;
   
 ```
 ```haxe
@@ -101,26 +101,14 @@ import flixel.addons.effects.FlxSkewedSprite;
 class Note extends FlxSkewedSprite
 {
   //add these 2 variables for the renderer
-  public var mesh:modcharting.SustainStrip = null;
+  public var mesh:modchart.modcharting.SustainStrip = null;
   public var z:Float = 0;
-```
-
-- In ModchartUtilities.hx (Leather Exclusive):
-
-```haxe
-// at the start of the HX
-import modcharting.ModchartFuncs; //to fix any crash lmao
-// (at the bottom of create())
-#if desktop DiscordClient.addLuaCallbacks(this); #end
-ModchartFuncs.loadLuaFunctions(this); //add this if you want lua functions in scripts
-//being used in leather engine as an example
-callOnLuas('onCreate', []);
 ```
 
 - In FunkinLua.hx (Found in psychlua folder) (0.7.X exclusive!):
 ```haxe
 //at the start of the HX
-    import modcharting.ModchartFuncs; //to fix any crash lmao
+    import modchart.modcharting.ModchartFuncs; //to fix any crash lmao
 class FunkinLua
 {
     //add this variable bellow "public var closed:Bool = false;"
@@ -136,49 +124,49 @@ class FunkinLua
 override function preset()
 {
 	set('Math', Math);
-	set('ModchartEditorState', modcharting.ModchartEditorState);
-	set('ModchartEvent', modcharting.ModchartEvent);
-	set('ModchartEventManager', modcharting.ModchartEventManager);
-	set('ModchartFile', modcharting.ModchartFile);
-	set('ModchartFuncs', modcharting.ModchartFuncs);
-	set('ModchartMusicBeatState', modcharting.ModchartMusicBeatState);
-	set('ModchartUtil', modcharting.ModchartUtil);
+	set('ModchartEditorState', modchart.modcharting.ModchartEditorState);
+	set('ModchartEvent', modchart.modcharting.ModchartEvent);
+	set('ModchartEventManager', modchart.modcharting.ModchartEventManager);
+	set('ModchartFile', modchart.modcharting.ModchartFile);
+	set('ModchartFuncs', modchart.modcharting.ModchartFuncs);
+	set('ModchartMusicBeatState', modchart.modcharting.ModchartMusicBeatState);
+	set('ModchartUtil', modchart.modcharting.ModchartUtil);
 	for (i in ['mod', 'Modifier'])
-		set(i, modcharting.Modifier); //the game crashes without this???????? what??????????? -- fue glow
-	set('ModifierSubValue', modcharting.Modifier.ModifierSubValue);
-	set('ModTable', modcharting.ModTable);
-	set('NoteMovement', modcharting.NoteMovement);
-	set('NotePositionData', modcharting.NotePositionData);
-	set('Playfield', modcharting.Playfield);
-	set('PlayfieldRenderer', modcharting.PlayfieldRenderer);
-	set('SimpleQuaternion', modcharting.SimpleQuaternion);
-	set('SustainStrip', modcharting.SustainStrip);
+		set(i, modchart.modcharting.Modifier); //the game crashes without this???????? what??????????? -- fue glow
+	set('ModifierSubValue', modchart.modcharting.Modifier.ModifierSubValue);
+	set('ModTable', modchart.modcharting.ModTable);
+	set('NoteMovement', modchart.modcharting.NoteMovement);
+	set('NotePositionData', modchart.modcharting.NotePositionData);
+	set('Playfield', modchart.modcharting.Playfield);
+	set('PlayfieldRenderer', modchart.modcharting.PlayfieldRenderer);
+	set('SimpleQuaternion', modchart.modcharting.SimpleQuaternion);
+	set('SustainStrip', modchart.modcharting.SustainStrip);
 	
-	modcharting.ModchartFuncs.loadHScriptFunctions(this);
+	modchart.modcharting.ModchartFuncs.loadHScriptFunctions(this);
 //--(else if you use SScript above or equal to version 6.1.80)--
 override function preset()
 {
 	set('Math', Math);
-	setClass(modcharting.ModchartEditorState);
-	setClass(modcharting.ModchartEvent);
-	setClass(modcharting.ModchartEventManager);
-	setClass(modcharting.ModchartFile);
-	setClass(modcharting.ModchartFuncs);
-	setClass(modcharting.ModchartMusicBeatState);
-	setClass(modcharting.ModchartUtil);
-	setClass(modcharting.Modifier); //the game crashes without this???????? what??????????? -- fue glow
-	setClass(modcharting.Modifier.ModifierSubValue);
-	setClass(modcharting.ModTable);
-	setClass(modcharting.NoteMovement);
-	setClass(modcharting.NotePositionData);
-	setClass(modcharting.Playfield);
-	setClass(modcharting.PlayfieldRenderer);
-	setClass(modcharting.SimpleQuaternion);
-	setClass(modcharting.SustainStrip);
-	modcharting.ModchartFuncs.loadHScriptFunctions(this);
+	setClass(modchart.modcharting.ModchartEditorState);
+	setClass(modchart.modcharting.ModchartEvent);
+	setClass(modchart.modcharting.ModchartEventManager);
+	setClass(modchart.modcharting.ModchartFile);
+	setClass(modchart.modcharting.ModchartFuncs);
+	setClass(modchart.modcharting.ModchartMusicBeatState);
+	setClass(modchart.modcharting.ModchartUtil);
+	setClass(modchart.modcharting.Modifier); //the game crashes without this???????? what??????????? -- fue glow
+	setClass(modchart.modcharting.Modifier.ModifierSubValue);
+	setClass(modchart.modcharting.ModTable);
+	setClass(modchart.modcharting.NoteMovement);
+	setClass(modchart.modcharting.NotePositionData);
+	setClass(modchart.modcharting.Playfield);
+	setClass(modchart.modcharting.PlayfieldRenderer);
+	setClass(modchart.modcharting.SimpleQuaternion);
+	setClass(modchart.modcharting.SustainStrip);
+	modchart.modcharting.ModchartFuncs.loadHScriptFunctions(this);
 //Function initMod -- Init's the mods functions for Hscript (found in psychlua)
 //Place this function anywhere in the HScript class!
-public function initMod(mod:modcharting.Modifier)
+public function initMod(mod:modchart.modcharting.Modifier)
 {
 	call("initMod", [mod]);
 }
