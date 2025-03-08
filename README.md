@@ -1,6 +1,6 @@
 # FNF Modcharting Tools
 Just a thing I made to make modcharting easier, should be easy to add to most engines.
-Still very WIP and not everything is supported yet!
+Still very WIP and not everything is supported yet! Only works on psych 0.7.x.
 
 ## Features
 ### Modifier system for easing in and out effects
@@ -10,15 +10,15 @@ Still very WIP and not everything is supported yet!
 ![](https://github.com/TheZoroForce240/FNF-Modcharting-Tools/blob/main/readme/sustains.gif)
 ### Custom Modifier Support via Hscript
 ![](https://github.com/TheZoroForce240/FNF-Modcharting-Tools/blob/main/readme/custommods.gif)
-### Support for multiple engines
-- Base Game (not tested)
-- [Psych Engine](https://github.com/ShadowMario/FNF-PsychEngine) (working 0.6.3 and 0.7.x, includes lua functions)
-- [Leather Engine](https://github.com/Leather128/LeatherEngine) (working 0.5.0)
-- [Kade Engine](https://github.com/KadeDev/Kade-Engine) (not tested)
-- [Yoshi Engine](https://github.com/YoshiCrafter29/YoshiCrafterEngine) (not tested)
-- [Forever Engine Legacy](https://github.com/Yoshubs/Forever-Engine-Legacy) (not tested)
-- [FPS Plus](https://github.com/ThatRozebudDude/FPS-Plus-Public) (not tested)
-
+### THIS MODCHART SYSTEM ONLY HAS SUPPORT FOR PSYCH ENGINE
+- [Psych Engine](https://github.com/ShadowMario/FNF-PsychEngine) (0.7.x, includes lua functions)
+### Support for multiple modcharts
+Most versions of this modchart system doesn't have support for middlescroll, now it does! in the modchart editor, make a new folder in the songs data folder called "modchartData", inside that folder save the modchart as listed
+- If you're using only upscroll, save the modchart as "modchart-upscroll"
+- If you're using middlescroll AND upscroll, save the modchart as "modchart-middleUp"
+- If you're using only downscroll, save the modchart as "modchart-downscroll"
+- If you're using middlescroll AND downscroll, save the modchart as "modchart-middleDown"
+IT IS CASE SENSITIVE, SAVE IT EXACTLY AS IT'S LISTED
 
 ## Credits 
 - [Original FNF Team](https://github.com/ninjamuffin99/Funkin) - They made the game
