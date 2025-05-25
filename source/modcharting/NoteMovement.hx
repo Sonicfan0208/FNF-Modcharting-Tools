@@ -1,15 +1,12 @@
 package modcharting;
 
-import flixel.math.FlxMath;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.FlxSprite;
-import flixel.FlxG;
-
 #if LEATHER
 import states.PlayState;
 import game.Note;
-
-#else 
+#elseif (PSYCH && PSYCHVERSION >= "0.7")
+import states.PlayState;
+import objects.Note;
+#else
 import PlayState;
 import Note;
 #end
@@ -30,10 +27,11 @@ class NoteMovement
     #if LEATHER
     public static var leatherEngineOffsetStuff:Map<String, Float> = [];
     #end
+
     public static function getDefaultStrumPos(game:PlayState)
     {
         defaultStrumX = []; //reset
-        defaultStrumY = []; 
+        defaultStrumY = [];
         defaultScale = [];
         arrowSizes = [];
         keyCount = #if (LEATHER || KADE) PlayState.strumLineNotes.length-PlayState.playerStrums.length #else game.strumLineNotes.length-game.playerStrums.length #end; //base game doesnt have opponent strums as group
@@ -51,9 +49,10 @@ class NoteMovement
             #if LEATHER
             var localKeyCount = (i < keyCount ? keyCount : playerKeyCount);
             var s = Std.parseFloat(game.ui_settings[0]) * (Std.parseFloat(game.ui_settings[2]) - (Std.parseFloat(game.mania_size[localKeyCount-1])));
-            #else 
+            #else
             var s = 0.7;
             #end
+
             defaultScale.push(s);
             arrowSizes.push(160*s);
         }
@@ -62,15 +61,16 @@ class NoteMovement
         #end
         totalKeyCount = keyCount + playerKeyCount;
     }
-    public static function getDefaultStrumPosEditor(game:ModchartEditorState)
+    public static function getDefaultStrumPosEditor(game:modcharting.ModchartEditorState)
     {
         #if ((PSYCH || LEATHER) && !DISABLE_MODCHART_EDITOR)
         defaultStrumX = []; //reset
-        defaultStrumY = []; 
+        defaultStrumY = [];
         defaultScale = [];
         arrowSizes = [];
         keyCount = game.strumLineNotes.length-game.playerStrums.length; //base game doesnt have opponent strums as group
         playerKeyCount = game.playerStrums.length;
+
 
         for (i in 0...game.strumLineNotes.members.length)
         {
@@ -83,6 +83,7 @@ class NoteMovement
             #else
             var s = 0.7;
             #end
+
             defaultScale.push(s);
             arrowSizes.push(160*s);
         }

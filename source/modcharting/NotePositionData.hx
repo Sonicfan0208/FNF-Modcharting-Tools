@@ -5,7 +5,6 @@ import flixel.util.FlxPool;
 
 class NotePositionData implements IFlxDestroyable
 {
-
     static var pool:FlxPool<NotePositionData> = new FlxPool(NotePositionData);
 
     public var x:Float;
@@ -34,12 +33,12 @@ class NotePositionData implements IFlxDestroyable
     public function setupStrum(x:Float, y:Float, z:Float, lane:Int, scaleX:Float, scaleY:Float, pf:Int)
     {
         this.x = x;
-        this.y =  y;
+        this.y = y;
         this.z = z;
         this.angle = 0;
         this.alpha = 1;
         this.scaleX = scaleX; 
-        this.scaleY = scaleY; 
+        this.scaleY = scaleY;
         this.index = lane;
         this.playfieldIndex = pf;
         this.lane = lane;
@@ -54,12 +53,12 @@ class NotePositionData implements IFlxDestroyable
     public function setupNote(x:Float, y:Float, z:Float, lane:Int, scaleX:Float, scaleY:Float, pf:Int, alpha:Float, curPos:Float, noteDist:Float, iaX:Float, iaY:Float, strumTime:Float, index:Int)
     {
         this.x = x;
-        this.y =  y;
+        this.y = y;
         this.z = z;
         this.angle = 0;
         this.alpha = alpha;
         this.scaleX = scaleX; 
-        this.scaleY = scaleY; 
+        this.scaleY = scaleY;
         this.index = index;
         this.playfieldIndex = pf;
         this.lane = lane;

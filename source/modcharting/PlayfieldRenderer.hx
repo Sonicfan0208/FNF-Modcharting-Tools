@@ -1,6 +1,5 @@
 package modcharting;
 
-
 import flixel.math.FlxMath;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
@@ -23,9 +22,14 @@ import states.PlayState;
 import game.Note;
 import game.StrumNote;
 import game.Conductor;
-#else 
+#elseif (PSYCH && PSYCHVERSION >= "0.7")
+import states.PlayState;
+import objects.Note;
+import objects.StrumNote;
+#else
 import PlayState;
 import Note;
+import StrumNote;
 #end
 
 using StringTools;
@@ -64,7 +68,7 @@ class PlayfieldRenderer extends FlxSprite //extending flxsprite just so i can ed
     public var speed:Float = 1.0;
 
     public var modifiers(get, default):Map<String, Modifier>;
-    
+
     private function get_modifiers() : Map<String, Modifier>
     {
         return modifierTable.modifiers; //back compat with lua modcharts
@@ -101,8 +105,12 @@ class PlayfieldRenderer extends FlxSprite //extending flxsprite just so i can ed
 
     override function update(elapsed:Float) 
     {
-        eventManager.update(elapsed);
-        tweenManager.update(elapsed); //should be automatically paused when you pause in game
+        try {
+            eventManager.update(elapsed);
+            tweenManager.update(elapsed);
+        } catch(e) {
+            trace(e);
+        }
         super.update(elapsed);
     }
 
@@ -115,15 +123,20 @@ class PlayfieldRenderer extends FlxSprite //extending flxsprite just so i can ed
         strumGroup.cameras = this.cameras;
         notes.cameras = this.cameras;
         
-        drawStuff(getNotePositions());
+        try {
+            drawStuff(getNotePositions());
+        } catch(e) {
+            trace(e);
+        }
         //draw notes to screen
     }
 
 
-    private function addDataToStrum(strumData:NotePositionData, strum:FlxSprite)
+    private function addDataToStrum(strumData:NotePositionData, strum:StrumNoteType)
     {
         strum.x = strumData.x;
         strum.y = strumData.y;
+        //Add Z to your strumNoteType if you want it youself!
         //strum.z = strumData.z;
         strum.angle = strumData.angle;
         strum.alpha = strumData.alpha;
@@ -172,15 +185,7 @@ class PlayfieldRenderer extends FlxSprite //extending flxsprite just so i can ed
         var noteScaleX = NoteMovement.defaultScale[lane];
         var noteScaleY = NoteMovement.defaultScale[lane];
 
-        var noteAlpha:Float = 1;
-        #if PSYCH
-        noteAlpha = notes.members[noteIndex].multAlpha;
-        #else 
-        if (notes.members[noteIndex].isSustainNote)
-            noteAlpha = 0.6;
-        else 
-            noteAlpha = 1;
-        #end
+        var noteAlpha:Float = #if PSYCH notes.members[noteIndex].multAlpha; #else notes.members[noteIndex].isSustainNote ? 0.6 : 1; #end
 
         if (ModchartUtil.getIsPixelStage(instance))
         {
@@ -193,7 +198,6 @@ class PlayfieldRenderer extends FlxSprite //extending flxsprite just so i can ed
         noteData.setupNote(noteX, noteY, noteZ, lane, noteScaleX, noteScaleY, playfieldIndex, noteAlpha, 
             curPos, noteDist, incomingAngle[0], incomingAngle[1], notes.members[noteIndex].strumTime, noteIndex);
         playfields[playfieldIndex].applyOffsets(noteData);
-
         return noteData;
     }
 
@@ -240,7 +244,6 @@ class PlayfieldRenderer extends FlxSprite //extending flxsprite just so i can ed
 
                 var noteDist = getNoteDist(i);
                 noteDist = modifierTable.applyNoteDistMods(noteDist, lane, pf);
-                
 
                 var sustainTimeThingy:Float = 0;
 
@@ -292,14 +295,19 @@ class PlayfieldRenderer extends FlxSprite //extending flxsprite just so i can ed
     {
         if (noteData.alpha <= 0)
             return;
+        var changeX:Bool = ((noteData.z > 0 || noteData.z < 0) && noteData.z != 0);
         var strumNote = strumGroup.members[noteData.index];
-        var thisNotePos = ModchartUtil.calculatePerspective(new Vector3D(noteData.x+(strumNote.width/2), noteData.y+(strumNote.height/2), noteData.z*0.001), 
-        ModchartUtil.defaultFOV*(Math.PI/180), -(strumNote.width/2), -(strumNote.height/2));
-
+        var thisNotePos = changeX ?
+            ModchartUtil.calculatePerspective(new Vector3D(noteData.x+(strumNote.width/2), noteData.y+(strumNote.height/2), noteData.z*0.001), 
+            ModchartUtil.defaultFOV*(Math.PI/180), -(strumNote.width/2), -(strumNote.height/2))
+            : new Vector3D(noteData.x, noteData.y, 0);
+        
         noteData.x = thisNotePos.x;
         noteData.y = thisNotePos.y;
-        noteData.scaleX *= (1/-thisNotePos.z);
-        noteData.scaleY *= (1/-thisNotePos.z);
+        if (changeX) {
+            noteData.scaleX *= (1/-thisNotePos.z);
+            noteData.scaleY *= (1/-thisNotePos.z);
+        }
 
         addDataToStrum(noteData, strumGroup.members[noteData.index]); //set position and stuff before drawing
         strumGroup.members[noteData.index].cameras = this.cameras;
@@ -310,14 +318,19 @@ class PlayfieldRenderer extends FlxSprite //extending flxsprite just so i can ed
     {
         if (noteData.alpha <= 0)
             return;
+        var changeX:Bool = ((noteData.z > 0 || noteData.z < 0) && noteData.z != 0);
         var daNote = notes.members[noteData.index];
-        var thisNotePos = ModchartUtil.calculatePerspective(new Vector3D(noteData.x+(daNote.width/2)+ModchartUtil.getNoteOffsetX(daNote, instance), noteData.y+(daNote.height/2), noteData.z*0.001), 
-        ModchartUtil.defaultFOV*(Math.PI/180), -(daNote.width/2), -(daNote.height/2));
+        var thisNotePos = changeX ?
+            ModchartUtil.calculatePerspective(new Vector3D(noteData.x+(daNote.width/2)+ModchartUtil.getNoteOffsetX(daNote, instance), noteData.y+(daNote.height/2), noteData.z*0.001), 
+            ModchartUtil.defaultFOV*(Math.PI/180), -(daNote.width/2), -(daNote.height/2))
+            : new Vector3D(noteData.x, noteData.y, 0);
 
         noteData.x = thisNotePos.x;
         noteData.y = thisNotePos.y;
-        noteData.scaleX *= (1/-thisNotePos.z);
-        noteData.scaleY *= (1/-thisNotePos.z);
+        if (changeX) {
+            noteData.scaleX *= (1/-thisNotePos.z);
+            noteData.scaleY *= (1/-thisNotePos.z);
+        }
         //set note position using the position data
         addDataToNote(noteData, notes.members[noteData.index]); 
         //make sure it draws on the correct camera
@@ -349,10 +362,16 @@ class PlayfieldRenderer extends FlxSprite //extending flxsprite just so i can ed
         
         var timeToNextSustain = ModchartUtil.getFakeCrochet()/4;
         if (noteData.noteDist < 0)
-            timeToNextSustain = -ModchartUtil.getFakeCrochet()/4; //weird shit that fixes upscroll lol
+            timeToNextSustain *= -1; //weird shit that fixes upscroll lol
+            // timeToNextSustain = -ModchartUtil.getFakeCrochet()/4; //weird shit that fixes upscroll lol
 
+        #if (PSYCH && !(PSYCHVERSION >= "0.7"))
         var nextHalfNotePos = getSustainPoint(noteData, timeToNextSustain*0.5);
         var nextNotePos = getSustainPoint(noteData, timeToNextSustain);
+        #else
+        var nextHalfNotePos = ModchartUtil.getDownscroll(instance) ? getSustainPoint(noteData, timeToNextSustain*0.458) : getSustainPoint(noteData, timeToNextSustain*0.548);
+        var nextNotePos = ModchartUtil.getDownscroll(instance) ? getSustainPoint(noteData, timeToNextSustain+2.2) : getSustainPoint(noteData, timeToNextSustain-2.2);
+        #end
 
         var flipGraphic = false;
 
@@ -386,8 +405,9 @@ class PlayfieldRenderer extends FlxSprite //extending flxsprite just so i can ed
                 drawStrum(noteData);
             else if (!notes.members[noteData.index].isSustainNote) //draw regular note
                 drawNote(noteData);
-            else //draw sustain
-                drawSustainNote(noteData);
+            else{ //draw sustain
+                #if LEATHER /*disable the funny sustains options for low-end pc lol*/if(utilities.Options.getData("optimizedModcharts")) drawNote(noteData) else #end drawSustainNote(noteData);
+            }
 
         }
     }
@@ -440,10 +460,12 @@ class PlayfieldRenderer extends FlxSprite //extending flxsprite just so i can ed
     {
         if (modchart != null)
         {
+            #if hscript
             for (customMod in modchart.customModifiers)
             {
                 customMod.destroy(); //make sure the interps are dead
             }
+            #end
         }
         super.destroy();
     }

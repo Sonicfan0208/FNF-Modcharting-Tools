@@ -4,6 +4,10 @@ import flixel.graphics.tile.FlxDrawTrianglesItem.DrawData;
 import openfl.geom.Vector3D;
 #if LEATHER
 import game.Note;
+#elseif (PSYCH && PSYCHVERSION >= "0.7")
+import objects.Note;
+#else
+import Note;
 #end
 import flixel.FlxStrip;
 
@@ -44,7 +48,7 @@ class SustainStrip extends FlxStrip
     {
         var yOffset = 2; //fix small gaps
         if (reverseClip)
-            yOffset = -yOffset;
+            yOffset *= -yOffset;
 
         var verts:Array<Float> = [];
         if (flipGraphic)
@@ -67,7 +71,7 @@ class SustainStrip extends FlxStrip
         else 
         {
             verts.push(thisNotePos.x);
-            verts.push(thisNotePos.y);
+            verts.push(thisNotePos.y); //fliped this with the down ones (last) to test if it bugs of it fixes itself
             verts.push(thisNotePos.x+(daNote.frameWidth*(1/-thisNotePos.z)*noteData.scaleX));
             verts.push(thisNotePos.y);
 
